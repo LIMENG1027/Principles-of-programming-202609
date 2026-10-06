@@ -21,16 +21,16 @@
 
 ## 2. UML Class Diagram
 
-![UML Class Diagram](UML Class Dirgram.png)
+![UML Class Diagram](UML Class Diagram.png)
 
-**Four Classes:**
+Four Classes:
 - `User` (parent)
 - `MemberUser` (child, IS-A User)
 - `EVCharger`
 - `ChargingSession` (HAS-A User and HAS-A EVCharger)
 
-**OOP Concepts Demonstrated:**
-- **Inheritance (IS-A):** `MemberUser(User)` calls `super().__init__()`
-- **Encapsulation:** private attributes with getters/setters
-- **Polymorphism:** `calculate_fee()` overridden in `MemberUser`
-- **Composition (HAS-A):** `ChargingSession` composed of `User` and `EVCharger`
+OOP Concepts Demonstrated:
+- Inheritance (IS-A): `MemberUser(User)` calls `super().__init__()`
+- Encapsulation: private attributes with getters/setters
+- Polymorphism: `calculate_fee()` overridden in `MemberUser`
+- Composition (HAS-A): `ChargingSession` composed of `User` and `EVCharger`
