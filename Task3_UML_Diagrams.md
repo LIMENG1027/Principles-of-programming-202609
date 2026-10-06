@@ -2,7 +2,7 @@
 
 ## 1. UML Use Case Diagram
 
-![UML Use Case Diagram](UML_Use_Diagram.png)
+![UML Use Case Diagram](UML_Use_Case_Diagram.png)
 
 
 **Actors:**
