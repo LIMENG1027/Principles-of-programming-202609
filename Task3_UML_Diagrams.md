@@ -2,7 +2,8 @@
 
 ## 1. UML Use Case Diagram
 
-![UML Use Case Diagram](UML Use Case Dirgram.png)
+![UML Use Case Diagram](UML_Use_Diagram.png)
+
 
 **Actors:**
 - Driver / Student (Member)
@@ -21,7 +22,7 @@
 
 ## 2. UML Class Diagram
 
-![UML Class Diagram](UML Class Diagram.png)
+![UML Class Diagram](UML_Class_Diagram.png)
 
 Four Classes:
 - `User` (parent)
