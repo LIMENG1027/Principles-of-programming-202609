@@ -3,17 +3,17 @@
 ITS72604 Principles of Programming - Assessment 1 (Task 4)
 Smart Campus EV Charging & Parking Management System - Object-Oriented version
 
-Classes (see the Task 3 UML Class Diagram):
-    User            (parent)  - public user, pays the normal rate
-    MemberUser      (child)   - IS-A User, staff / student, overrides calculate_fee()
-    EVCharger                 - AC / DC charger, owns the Table 1 tariff
-    ChargingSession           - HAS-A User and HAS-A EVCharger, produces the bill
+Classes (refer to the Task 3 UML Class Diagram):
+    User            (parent): public user, and pays the normal rate
+    MemberUser      (child) : IS-A User, staff or student, overrides calculate_fee()
+    EVCharger               : AC / DC charger, owns the Table 1 tariff
+    ChargingSession         : HAS-A User and HAS-A EVCharger, produces the bill
 
-OOP concepts demonstrated:
-    Inheritance    : MemberUser(User) with super().__init__() and super().calculate_fee()
-    Encapsulation  : private attributes (__name) with getters / validating setters
-    Polymorphism   : calculate_fee() / get_discount_label() overridden in MemberUser
-    Composition    : ChargingSession is built from a User object and an EVCharger object
+OOP:
+    Inheritance  : MemberUser(User) with super().__init__() and super().calculate_fee()
+    Encapsulation: private attributes (__name) with getters / validating setters
+    Polymorphism : calculate_fee() / get_discount_label() overridden in MemberUser
+    Composition  : ChargingSession is built from a User object and an EVCharger object
 """
 
 import math
@@ -23,10 +23,10 @@ LINE_WIDTH = 60
 
 
 # ==========================================================================
-# Class 1 : User  (parent class)
+# Class1: User  (parent class)
 # ==========================================================================
 class User:
-    """A campus EV user who has no staff / student membership (PUBLIC)."""
+    """A campus EV user who is no staff or student (PUBLIC)."""
 
     def __init__(self, user_id, vehicle_number, is_first_time=False, has_eco_pass=False):
         # Private attributes are initialised through the validating setters
@@ -63,7 +63,7 @@ class User:
         plate = str(vehicle_number).strip().upper()
         if not re.fullmatch(r"[A-Z0-9 ]{2,10}", plate):
             raise ValueError(
-                f"Invalid vehicle number '{plate}': use 2-10 letters / digits.")
+                f"Invalid vehicle number '{plate}': Use 2-10 letters / digits.")
         self.__vehicle_number = plate
 
     def set_first_time(self, is_first_time):
@@ -199,10 +199,10 @@ class EVCharger:
 
 
 # ==========================================================================
-# Class 4 : ChargingSession  (composed of a User and an EVCharger)
+# Class4: ChargingSession  (composed of a User and an EVCharger)
 # ==========================================================================
 class ChargingSession:
-    """One charging visit. HAS-A User and HAS-A EVCharger; generates the bill."""
+    """one charging visit.HAS-A user and HAS-A EVCharger; generate bill."""
 
     ECO_PASS_DISCOUNT = 2.00
     PEAK_SURCHARGE = 5.00
@@ -277,7 +277,7 @@ class ChargingSession:
 
     def set_start_hour(self, start_hour):
         if not isinstance(start_hour, int) or not 0 <= start_hour <= 23:
-            raise ValueError(f"Start hour must be a whole number 0-23 (got {start_hour}).")
+            raise ValueError(f"Start hour must be a whole number between 0-23 (got {start_hour}).")
         self.__start_hour = start_hour
 
     def set_idle(self, is_idle):
@@ -288,7 +288,7 @@ class ChargingSession:
 
     # ---------- business logic ----------
     def is_peak_session(self):
-        """True if any billed hour falls between 12 PM and 4 PM."""
+        """ 'True' if any billed hour falls between 12 PM and 4 PM."""
         for offset in range(self.__billed_hours):
             current_hour = (self.__start_hour + offset) % 24
             if self.PEAK_START_HOUR <= current_hour < self.PEAK_END_HOUR:
@@ -296,11 +296,11 @@ class ChargingSession:
         return False
 
     def calculate_bill(self):
-        """Return every component of the bill in a dictionary."""
+        """Return every components of the bill in dictionary."""
         charger_type = self.__charger.get_charger_type()
         gross_fee = self.__charger.calculate_gross_fee(self.__billed_hours)
 
-        # Polymorphic call: the correct calculate_fee() runs for User or MemberUser
+        # Polymorphic call: the right calculate_fee() runs for User or MemberUser
         fee_after_discount = self.__user.calculate_fee(gross_fee, charger_type)
         discount = gross_fee - fee_after_discount
 
@@ -372,12 +372,12 @@ def print_heading(text):
 
 
 def demo_encapsulation():
-    """Part A - private attributes and setter validation."""
+    """Part A - private attributes and setter."""
     print_heading("PART A : ENCAPSULATION & SETTER VALIDATION")
     user = User("P1000", "ABC 123")
     print("Created  :", user)
 
-    # 1. A private attribute cannot be reached directly from outside the class
+    # 1. A private attribute cannot reach directly from outside the class
     try:
         print(user.__user_id)
     except AttributeError:
@@ -387,7 +387,7 @@ def demo_encapsulation():
     user.set_vehicle_number("wqa 9999")
     print("Setter accepted a valid plate  ->", user.get_vehicle_number())
 
-    # 3. Invalid updates are rejected by the setter validation logic
+    # 3. Invalid updates will be rejected by the logic of setter validation
     invalid_updates = [
         ("set_user_id('P-10!')", lambda: user.set_user_id("P-10!")),
         ("set_vehicle_number('#')", lambda: user.set_vehicle_number("#")),
@@ -404,7 +404,7 @@ def demo_encapsulation():
 
 
 def demo_polymorphism():
-    """Part B - the same call, different behaviour for each object type."""
+    """Part B - the same call, have different behaviour for each object type."""
     print_heading("PART B : POLYMORPHISM - calculate_fee()")
     users = [
         User("P2001", "PUB 001"),
