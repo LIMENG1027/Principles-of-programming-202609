@@ -1,18 +1,18 @@
 # Principles-of-programming-202609-LLecture-Assignment 1-1
 """
 Smart Campus EV Charging & Parking Management System
-Procedural prototype: calculates the itemised bill of an EV charging session.
+Procedural prototype: Calculates the itemised bill of an EV charging session.
 
 Assumptions (also stated in the Task 1 pseudocode):
-  1. Charging time is billed "per hour or part thereof" -> hours are rounded UP.
-  2. Table 1 is a progressive (tiered) tariff: hours 1-2, 3-4, 5-6 and 7+ are each
-     charged at the rate of their own tier.
-  3. The "Max" fee for overtime (AC RM 80 / DC RM 150) caps the TOTAL charging fee.
-  4. Discounts / waivers apply to the gross charging fee only. The first-time waiver
-     (100%) overrides Staff / Student discounts (no stacking of percentage offers).
+  1. Charging time is billed "per hour or part thereof", hours are rounded UP.
+  2. Table 1 is a progressive (tiered) tariff: hours 1-2, 3-4, 5-6 and over 7 are each
+     charged in the rate of their own tier.
+  3. The 'Max' fee for overtime fee (AC RM 80 / DC RM 150) caps the TOTAL charging fee.
+  4. Discounts or waivers apply to the gross charging fee only. The first-time waiver
+     (100%) overrides Staff or Student discounts (no stacking of percentage offers).
   5. Surcharges and the RFID card fee are always payable; the RM 2.00 Eco-Pass
-     discount is deducted from the total bill (never below RM 0.00).
-  6. The Peak Hour surcharge (12 PM - 4 PM) is charged once if any billed hour of the
+     discount is deducted from the total bill (but never below RM 0.00).
+  6. The Peak Hour surcharge from 12 PM to 4 PM is charged only once if any billed hour of the
      session falls inside the peak window.
 """
 
@@ -50,19 +50,19 @@ LINE_WIDTH = 60
 def get_user_id():
     """Ask for a non-empty alphanumeric user ID."""
     while True:
-        user_id = input("Enter User ID (e.g. S1001)        : ").strip().upper()
+        user_id = input("Enter User ID (e.g. A1001)        : ").strip().upper()
         if user_id.isalnum():
             return user_id
-        print("  [!] Invalid ID. Use letters and digits only.")
+        print("  [!] Invalid ID. Please use letters and digits only.")
 
 
 def get_vehicle_number():
-    """Ask for a vehicle plate number (2-10 letters / digits / spaces)."""
+    """Ask for a vehicle plate number (2-10 letters/digits/spaces)."""
     while True:
-        plate = input("Enter Vehicle Number (e.g. WXY 1234): ").strip().upper()
+        plate = input("Enter Vehicle Number (e.g. ASD 1234): ").strip().upper()
         if re.fullmatch(r"[A-Z0-9 ]{2,10}", plate):
             return plate
-        print("  [!] Invalid plate number. Use 2-10 letters / digits.")
+        print("  [!] Invalid plate number. Please use 2-10 letters / digits.")
 
 
 def get_menu_choice(title, options):
@@ -101,7 +101,7 @@ def get_start_hour():
 
 
 def get_yes_no(question):
-    """Return True for yes and False for no."""
+    """Return 'True' for yes and return 'False' for no."""
     while True:
         answer = input(f"{question} (Y/N): ").strip().upper()
         if answer in ("Y", "N"):
@@ -127,10 +127,10 @@ def read_session_details():
         "start_hour": get_start_hour(),
     }
     print("Special conditions:")
-    session["is_first_time"] = get_yes_no("   First-time user (new registration)?")
-    session["has_eco_pass"] = get_yes_no("   Green Eco-Pass holder?             ")
-    session["is_idle"] = get_yes_no("   Occupied bay after 100% charge?    ")
-    session["card_lost"] = get_yes_no("   Lost RFID access card replacement? ")
+    session["is_first_time"] = get_yes_no("Are you first-time user (new registration)?")
+    session["has_eco_pass"] = get_yes_no("Are you green Eco-Pass holder?")
+    session["is_idle"] = get_yes_no("Are you occupied bay after 100% charge?")
+    session["card_lost"] = get_yes_no("Are you lost RFID access card replacement?")
     return session
 
 
@@ -138,7 +138,7 @@ def read_session_details():
 # Calculation functions (Elements 2, 3 and 4)
 # --------------------------------------------------------------------------
 def calculate_charging_fee(charger_type, billed_hours):
-    """Element 2 - progressive tiered fee from Table 1, capped at the maximum."""
+    """Element 2-progressive tiered fee from Table 1, capped at the maximum."""
     gross_fee = 0.0
     tier_start = 0
     for tier_end, ac_rate, dc_rate in TIER_TABLE:
@@ -153,7 +153,7 @@ def calculate_charging_fee(charger_type, billed_hours):
 
 
 def evaluate_discount(member_type, charger_type, is_first_time, gross_fee):
-    """Element 3 - return (discount_label, discount_amount) from Table 2."""
+    """Element 3 - return (discount_label, discount_amount) from Table2."""
     if is_first_time:
         return "First-Time User Waiver (100%)", gross_fee
     if member_type == "STAFF":
@@ -166,7 +166,7 @@ def evaluate_discount(member_type, charger_type, is_first_time, gross_fee):
 
 
 def is_peak_session(start_hour, billed_hours):
-    """Return True if any billed hour falls between 12 PM and 4 PM."""
+    """Return 'True' if any billed hour falls between 12PM and 4PM."""
     for hour_offset in range(billed_hours):
         current_hour = (start_hour + hour_offset) % 24
         if PEAK_START_HOUR <= current_hour < PEAK_END_HOUR:
@@ -175,7 +175,7 @@ def is_peak_session(start_hour, billed_hours):
 
 
 def collect_surcharges(session):
-    """Element 4 - return a list of (description, amount) surcharge items."""
+    """Element 4 - return a list about (description,  amount) surcharge items."""
     surcharges = []
     if is_peak_session(session["start_hour"], session["billed_hours"]):
         surcharges.append(("Peak Hour Surcharge (12PM-4PM)", PEAK_SURCHARGE))
@@ -241,7 +241,7 @@ def main():
     while process_another:
         session = read_session_details()
 
-        # Elements 2 - 4: calculate every component of the bill
+        # Elements 2 - 4: calculate every components of the bill
         gross_fee = calculate_charging_fee(session["charger_type"],
                                            session["billed_hours"])
         discount_label, discount_amount = evaluate_discount(
@@ -253,13 +253,13 @@ def main():
         eco_discount = min(ECO_PASS_DISCOUNT, subtotal) if session["has_eco_pass"] else 0.0
         net_payable = subtotal - eco_discount
 
-        # Element 5: display the bill
+        # Element 5: display bill
         bill_count += 1
         daily_total += net_payable
         print_bill(bill_count, session, gross_fee, discount_label,
                    discount_amount, surcharges, eco_discount, net_payable)
 
-        # Element 6: ask whether to process another vehicle
+        # Element 6: ask user to process another vehicle or not?
         process_another = get_yes_no("\nProcess another vehicle?")
 
     print("\n" + "=" * LINE_WIDTH)
