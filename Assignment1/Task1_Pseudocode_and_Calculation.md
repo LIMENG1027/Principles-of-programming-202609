@@ -5,25 +5,25 @@
 BEGIN EV Charging Billing
  
     // ---------- Constants taken from Table 1 and Table 2 ----------
-    DEFINE TIER_LIMIT        = [2, 4, 6]            // last hour of tiers 1, 2 and 3
-    DEFINE AC_RATE           = [4.00, 6.00, 8.00]   // RM per hour, AC 7kW
+    DEFINE TIER_LIMIT        = [2, 4, 6]            // last hour of tiers 1, 2，3
+    DEFINE AC_RATE           = [4.00, 6.00, 8.00]    // RM per hour, AC 7kW
     DEFINE DC_RATE           = [10.00, 15.00, 20.00] // RM per hour, DC 50kW
     DEFINE AC_OVERTIME_RATE  = 12.00,  AC_MAX_FEE = 80.00
     DEFINE DC_OVERTIME_RATE  = 30.00,  DC_MAX_FEE = 150.00
     DEFINE STAFF_RATE        = 0.50,   STUDENT_RATE = 0.25
     DEFINE ECO_DISCOUNT      = 2.00,   PEAK_SURCHARGE = 5.00
     DEFINE IDLE_SURCHARGE    = 15.00,  CARD_FEE = 30.00
-    DEFINE PEAK_START = 12,  PEAK_END = 16          // 12 PM - 4 PM
+    DEFINE PEAK_START = 12,  PEAK_END = 16          // 12 PM to 4 PM
     DEFINE MAX_HOURS  = 24
  
     SET billCount      = 0
     SET dailyTotal     = 0.00
     SET processAnother = "Y"
  
-    // ===== ELEMENT 6 : CONTINUOUS PROGRAM LOOP =====
+    // ===== ELEMENT6 : CONTINUOUS PROGRAM LOOP =====
     WHILE processAnother = "Y" DO
  
-        // ===== ELEMENT 1 : USER INPUT (each field is validated) =====
+        // ===== ELEMENT1 : USER INPUT (each field is validated) =====
         REPEAT
             READ userID
         UNTIL userID is not empty AND userID has only letters / digits
@@ -38,7 +38,7 @@ BEGIN EV Charging Billing
         UNTIL memberChoice IN {1, 2, 3}
         SET memberType = STAFF, STUDENT or PUBLIC according to memberChoice
  
-        DISPLAY "[1] AC  [2] DC"
+        DISPLAY "[1] AC [2] DC"
         REPEAT
             READ chargerChoice
         UNTIL chargerChoice IN {1, 2}
@@ -56,14 +56,14 @@ BEGIN EV Charging Billing
         // Special conditions (each answer must be Y or N)
         READ isFirstTime, hasEcoPass, isIdle, cardLost
  
-        // ===== ELEMENT 2 : CHARGING FEE CALCULATION =====
+        // ===== ELEMENT2 : CHARGING FEE CALCULATION =====
         SET grossFee = CalculateChargingFee(chargerType, billedHours)
  
-        // ===== ELEMENT 3 : DISCOUNT AND WAIVER EVALUATION =====
+        // ===== ELEMENT3 : DISCOUNT AND WAIVER EVALUATION =====
         SET discountAmount = EvaluateDiscount(memberType, chargerType,
                                               isFirstTime, grossFee)
  
-        // ===== ELEMENT 4 : SURCHARGE AND FEE ADDITION =====
+        // ===== ELEMENT4 : SURCHARGE AND FEE ADDITION =====
         SET surchargeTotal = 0.00
         IF IsPeakSession(startHour, billedHours) THEN
             SET surchargeTotal = surchargeTotal + PEAK_SURCHARGE
@@ -83,7 +83,7 @@ BEGIN EV Charging Billing
         ENDIF
         SET netPayable = subtotal - ecoDiscount
  
-        // ===== ELEMENT 5 : FORMATTED BILL OUTPUT =====
+        // ===== ELEMENT5 : FORMATTED BILL OUTPUT =====
         SET billCount  = billCount + 1
         SET dailyTotal = dailyTotal + netPayable
         DISPLAY bill header (bill number, userID, vehicleNumber, memberType,
@@ -95,7 +95,7 @@ BEGIN EV Charging Billing
         DISPLAY "Less: Green Eco-Pass Discount"  , -ecoDiscount   // if applicable
         DISPLAY "NET PAYABLE (RM)"               , netPayable
  
-        // ===== ELEMENT 6 : ASK ATTENDANT TO CONTINUE =====
+        // ===== ELEMENT6 : ASK ATTENDANT TO CONTINUE =====
         REPEAT
             READ processAnother                     // "Y" or "N"
         UNTIL processAnother IN {"Y", "N"}
@@ -106,7 +106,7 @@ END EVChargingBilling
  
  
 // ---------------------------------------------------------------------
-// FUNCTION 1 : progressive tiered fee from Table 1 (capped at the maximum)
+// FUNCTION1 : progressive tiered fee from Table 1 (capped at the maximum)
 // ---------------------------------------------------------------------
 FUNCTION CalculateChargingFee(chargerType, billedHours)
     SET grossFee  = 0.00
@@ -133,7 +133,7 @@ END FUNCTION
  
  
 // ---------------------------------------------------------------------
-// FUNCTION 2 : member discount / waiver from Table 2 (no stacking of %)
+// FUNCTION2 : member discount / waiver from Table 2 (no stacking of %)
 // ---------------------------------------------------------------------
 FUNCTION EvaluateDiscount(memberType, chargerType, isFirstTime, grossFee)
     IF isFirstTime = "Y" THEN
@@ -149,7 +149,7 @@ END FUNCTION
  
  
 // ---------------------------------------------------------------------
-// FUNCTION 3 : is any billed hour inside the 12 PM - 4 PM peak window?
+// FUNCTION3 : is any billed hour inside the 12 PM - 4 PM peak window?
 // ---------------------------------------------------------------------
 FUNCTION IsPeakSession(startHour, billedHours)
     FOR offset = 0 TO billedHours - 1 DO
