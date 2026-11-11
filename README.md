@@ -17,7 +17,7 @@ All Final Exam files (Smart Campus Energy & EV Fleet Management Platform) are in
 | **Datasets**              | Raw & Cleaned CSV Files                     | [ev_campus_dataset.csv](Assignment3/ev_campus_dataset.csv),      [cleaned_energy_sales_data.csv](Assignment3/cleaned_energy_sales_data.csv)|
 | **Dependencies**          | Python Libraries List                       | [requirements.txt](Assignment3/requirements.txt)         |
 
-| Datasets | Raw & Cleaned CSV Files | [ev_campus_dataset.csv](Assignment3/ev_campus_dataset.csv), [cleaned_energy_sales_data.csv](Assignment3/cleaned_energy_sales_data.csv) |
+
 ## Assessment 1
 
 All Assessment 1 files are in the [`Assignment1/`](Assignment1/) folder.
