@@ -23,6 +23,7 @@ from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 # --------------------------------------------------------------------------- #
 # Logging: minimal, timestamped, level-tagged (industrial practice instead of
@@ -34,8 +35,9 @@ logging.basicConfig(level=logging.INFO,
 # --------------------------------------------------------------------------- #
 # Business constants (single source of truth - change here, not in the logic)
 # --------------------------------------------------------------------------- #
-RAW_FILE = "ev_campus_dataset.csv"
-CLEAN_FILE = "cleaned_energy_sales_data.csv"
+BASE_DIR = Path(__file__).resolve().parent
+RAW_FILE = str(BASE_DIR / "ev_campus_dataset.csv")
+CLEAN_FILE = str(BASE_DIR / "cleaned_energy_sales_data.csv")
 
 CARBON_FACTOR_KG_PER_KWH = 0.475       # kg CO2 avoided per kWh (given in brief)
 BASE_RATE_MYR_PER_HOUR: Dict[str, float] = {"AC": 6.0, "DC": 15.0}  # tariff
